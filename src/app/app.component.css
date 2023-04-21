@@ -1,0 +1,41 @@
+caption{
+    font-size:20px;
+}
+h1 {
+    text-align: center  ;
+}
+.center {
+    margin: auto;
+    width: 90%;
+
+    padding: 10px;
+}
+.centerSmall {
+    margin-top:30px;
+    margin-left: 15%;
+    width: 1000px;
+    border: 3px solid green;
+    padding: 10px;
+}
+table {
+    width:800px;
+    text-align: center;
+}
+app-plans {
+    text-align: center;
+}
+
+.date-picker  input {
+    display: block !important;
+    width: 100% !important;
+    height: calc(2.25rem + 2px) !important;
+    padding: .375rem .75rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    color: #495057 !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid #ced4da !important;
+    border-radius: .25rem !important;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
+}

@@ -1,0 +1,127 @@
+.warning {
+	color:red;
+}
+.center {
+	margin: auto;
+	width: 120px;
+
+	padding: 10px;
+  }
+  div.relative {
+	position: relative;
+	left: 520px;
+	width:300px;
+	height:80px;
+
+  } 
+  div.relative2 {
+	position: relative;
+	left: 420px;
+	width:500px;
+
+  }    
+table.toFit {
+	table-layout: fixed;;
+	width: 100%
+}
+table.cal {
+	background-color:#FFE0C2;
+}
+Button {
+	cursor:pointer;	
+}
+td.greenFont{
+	color:green;
+}
+td.green {
+		background-color:#75ad75;
+		font-size:smaller;
+		cursor:pointer;	
+}
+td.greenOverlap {
+	background-color:#75ad75;
+	font-size:smaller;
+	cursor:pointer;	
+	border:solid;
+	color: red;
+}
+td.orange {
+	background-color:orange;
+	font-size:smaller;
+	cursor:pointer;	
+}
+td.orangeOverlap {
+	background-color:orange;
+	font-size:smaller;
+	cursor:pointer;	
+	border:solid;
+	color: red;
+}
+td.unApproved {
+	background-color:white;
+	font-size:smaller;
+}
+td.red {
+	background-color:rgb(224, 110, 110);
+	font-size:smaller;
+}
+td.weekend {
+	background-color: rgb(233, 114, 114);
+}
+td.todayCell {
+	background-color:yellow;
+	font-size:smaller;
+}
+td.td1 {
+	padding:0;
+}
+td.noBorder {
+	border-collapse: collapse;
+	background-color: pink;
+}
+
+td.hd3 {
+	font-size:larger;
+	font-weight:bold;
+}
+
+#enterVac {
+	width:80%;
+}
+
+
+.h50 {
+	width:180px;
+	padding-left: 10px;
+
+  }
+  div.center { 
+	width: 220px;
+	height:50px;
+	margin: auto; 
+  }
+  .Button {
+	width:100px;  
+    color: #333;
+    box-shadow: -3px 3px grey, -2px 2px orange, -1px 1px orange;
+    border: 1px solid grey;
+}
+.spacer {
+	padding-top:30px;
+	height:250px;
+	width:1200px;
+}
+.raised{
+    /* ... */
+
+    width:1200px;
+    border:8px outset #999;
+    -webkit-box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+    -moz-box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+}
+.centerSmall{
+	width:1100px;
+}
+.mat-radio-button ~ .mat-radio-button {
+	margin-left: 16px;
+  }

@@ -1,0 +1,52 @@
+<div id='spacer'>
+<table class='centerSmall' *ngIf = showEdit >
+    <caption> {{ theCaption }} Edit Time Away </caption>
+  <tr *ngIf = !readOnly>
+      <th> Start Date</th>
+      <th> End Date</th>
+      <th> Start Date</th>
+      <th> Start Date</th>
+  </tr>  
+  <td>
+  <mat-form-field appearance="fill" *ngIf = showEdit>
+    <input matInput [(ngModel)]="startDate" [matDatepicker]="picker" (ngModelChange) = "changeDate" placeholder=" {{ startDate }}">
+    <mat-datepicker-toggle matSuffix [for]="picker"    ></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  </td>
+  <td *ngIf = readOnly   >
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Start Date</mat-label>
+    <input matInput placeholder="Ex. Pizza" value="Sushi">
+  </mat-form-field>
+  </td>
+  
+  <td>
+    <mat-form-field appearance="fill">
+      <input matInput [(ngModel)]="startDate" [matDatepicker]="picker2" placeholder=" {{ endDate }}">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+    </td>
+  <td>
+    <mat-form-field appearance="fill">
+      <mat-label>Choose a Reason</mat-label>
+      <mat-select >
+        <mat-option value="option1">Personal Vacation</mat-option>
+        <mat-option value="option2" >Meeting </mat-option>
+        <mat-option value="option3">Other </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </td>
+  <td>
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Note</mat-label>
+        <input matInput placeholder="Ex. Pizza" >
+      </mat-form-field>
+  </td>
+  <td>
+    <button mat-raised-button (click) = "addNewItem()">Submit Time Away</button>
+  </td>
+  </table>
+</div>
+  

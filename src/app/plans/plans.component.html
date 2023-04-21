@@ -1,0 +1,371 @@
+<div class='relative2'>
+  <h1> Physicians Time Away Schedule  </h1>
+  <h2 style="color:red" > This is a TEST version, no real Vacations are represented. </h2>
+</div>
+
+<div class='relative'>
+
+<img src="assets/prevMonthArrow.png"  (click) = 'advanceMonth(-1)'  alt="image">
+<img src="assets/nextMonthArrow.png" (click) = 'advanceMonth(1)'  alt="image">
+</div>
+
+<table id="myTable" border="1" class="cal" *ngIf = "vacData"  style="border-collapse: collapse; background-color:rgb(239, 214, 208)" cellpadding="2">
+<tr>
+  <td>Service</td>
+  <td [attr.colspan] = 'calParams.daysInFirstMonth'> {{ calParams.firstMonthName }} </td>
+  <td [attr.colspan] = 'calParams.daysInSecondMonth'> {{ calParams.secondMonthName }}  </td>
+</tr>
+<tr>
+  <td></td>
+  <td *ngFor = "let d of calDates" [className] ="getDateClass(d )"  >
+    {{ d.getDate()}}
+  </td>
+</tr>
+<!-- rows for each goAwayer  -->
+<tr *ngFor = "let item of vacData | keyvalue: unsorted" > {{ zeroDayNum() }}  <!-- the 'unsorted does the alphabetization of the serivces'-->
+<!-- boxes before 1s tA in a Row-->
+  <td   *ngFor='let loop3 of counter(item.value[0].daysTillStartDate ) ;let ip= index' [className] = 'getClass( item.value[9][0][ip])' > {{ showService(loop3, item.value[0]['service']) }} </td>
+<!-- 1st tA in a Row-->   
+  <td [attr.colspan] = 'item.value[0].vacLength' [className]= "getNameClass(item.value[0]) "  (click) = "showEditFunc(item.value[0])"   >   {{ item.value[0]['LastName'] }}  </td>
+<!-- 2ng tA in a Row-->
+  <ng-container *ngIf = 'item.value[1]'> 
+<!-- boxes between tA1 and tA2-->    
+   <td *ngFor= 'let loop4 of counter(daysBetween(item.value[0], item.value[1])) ;let ip= index' [className] = 'getClass( item.value[9][1][ip])' >  </td>
+<!-- tA2 -->   
+   <td [attr.colspan] = 'item.value[1].vacLength'  [className]= "getNameClass(item.value[1])"  (click) = "showEditFunc(item.value[1])"      >   {{ item.value[1]['LastName'] }}  </td>
+  </ng-container> 
+<!-- if there is NOT a 2nd tA in the Row-->
+  <ng-container  *ngIf = '!item.value[1] && item.value[9][1]'  > 
+<!-- fill out the boxes to the end of the Calendar-->    
+    <td *ngFor = "let lp of counter( item.value[0]['daysTillCalEnd']); let ip=index"    [className] = 'getClass( item.value[9][1][lp])' >  
+      <div *ngIf= 'item.value[9][1]' > 
+      </div>
+    </td>  
+   <td></td>    <!--   make up for the 'Service' col -->
+  </ng-container>
+  <!-- if there is a 3rd tA in a Row-->
+  <ng-container *ngIf = 'item.value[2]'> 
+  <!-- create boxes between 2nd and 3rd tA-->  
+    <td *ngFor= 'let loop5 of counter(  daysBetween(item.value[1], item.value[2])); let ip = index'  [className] = 'getClass( item.value[9][2][ip])'  > </td>
+  <!--  Name of 3rd tA goAwayer-->  
+    <td [attr.colspan] = 'item.value[2].vacLength'  [className]= "getNameClass(item.value[2])"  (click) = "showEditFunc(item.value[2])" >{{ item.value[2]['LastName']}}</td>
+   </ng-container> 
+  <!-- if there is a 4th tA in the Row--> 
+   <ng-container *ngIf = '!item.value[3] && item.value[2] && item.value[9][3]' >
+   <td  *ngFor = "let lp of item.value[2][10]; let ip=index"  > 
+     <div *ngIf='item.value[9][3]' >
+       </div>
+    </td>
+   </ng-container>
+
+   <ng-container *ngIf = '!item.value[2] && item.value[1]'>
+     <td *ngFor='let l3 of counter( daysTillEnd(item.value[1]));  let ip = index' 
+      [className] = 'getClass( item.value[9][2][ip])'  
+       > 
+      <div   *ngIf = 'item.value[9][2]'>  </div> 
+       </td>
+   </ng-container>
+<!-- 4th tA in a Row-->
+   <ng-container *ngIf = 'item.value[3]'> 
+    <td *ngFor= 'let loop6 of counter( daysBetween(item.value[2], item.value[3])); let ip = index ' [className] = 'getClass( item.value[9][3][ip])'     ></td>
+    <td [attr.colspan] = 'item.value[3].vacLength'  [className]="getNameClass(item.value[3])"  (click) = "showEditFunc(item.value[3])"  >{{ item.value[3]['LastName'] }} </td>
+   </ng-container> 
+   <ng-container *ngIf = '!item.value[4]  && item.value[3] && item.value[3][10] '>
+    <td *ngFor='let l3 of  item.value[3][10] ;  let ip = index'  > 
+      <div *ngIf = 'item.value[9][4]' > </div> </td>
+  </ng-container>
+
+  <ng-container *ngIf = '!item.value[3] && item.value[1]'>
+    <td *ngFor='let l3 of counter( daysTillEnd(item.value[1]));  let ip = index' 
+     [className] = 'getClass( item.value[9][3][ip])'  
+      > 
+     <div   *ngIf = 'item.value[9][3]'>  </div> 
+      </td>
+  </ng-container>
+<!--
+  <ng-container *ngIf = 'item.value[4]'> 
+    <td *ngFor= 'let loop6 of counter( daysBetween(item.value[3], item.value[4])); let ip = index '     ></td>
+    <td [attr.colspan] = 'item.value[4].vacLength'  [className]="getNameClass(item.value[4])"  (click) = "showEditFunc(item.value[4])"  >{{ item.value[3]['LastName'] }} </td>
+   </ng-container> 
+   <ng-container *ngIf = '!item.value[5]  && item.value[4] && item.value[4][10] '>
+    <td *ngFor='let l3 of  item.value[4][10] ;  let ip = index'  > 
+      <div *ngIf = 'item.value[9][5]' > </div> </td>
+  </ng-container>
+
+  <ng-container *ngIf = '!item.value[4] && item.value[1]'>
+    <td *ngFor='let l3 of counter( daysTillEnd(item.value[1]));  let ip = index' 
+     [className] = 'getClass( item.value[9][4][ip])'  > 
+     <div   *ngIf = 'item.value[9][3]'>  </div> 
+      </td>
+  </ng-container>
+-->
+
+</tr>
+</table>
+<br><br>
+<!--       Enter tA  Panel      -->
+<div *ngIf = "isUserAnMD && !CovererView " > 
+  <div class='raised' *ngIf = 'serviceMDs'>
+    <table class='centerSmall'>
+        <caption> Enter a Time Away  </caption>
+        <tr>
+      <td>
+        <div class='center'>
+          <mat-form-field >
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input [(ngModel)]='stDt' matStartDate plaPeceholder="Start date" #dateRangeStart  >  
+              <input matEndDate placeholder="End date" #dateRangeEnd  (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </div>  
+      </td>
+      <td> 
+        <div class='center'>
+          <mat-form-field >
+            <mat-label> Reason</mat-label>
+            <mat-select (selectionChange) = "reasonSelect($event)" >
+              <mat-option value="1">Personal Vacation</mat-option>
+              <mat-option value="4">Other </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>  
+      </td>
+      <td> 
+        <div class='center'> 
+          <mat-form-field >
+            <mat-label> Coverer </mat-label>
+            <mat-select (selectionChange) ="covererSelect($event)" >
+              <mat-option *ngFor="let MD of serviceMDs "
+              [value]="MD ">{{ MD.LastName }}</mat-option>
+            </mat-select>
+          </mat-form-field> 
+        </div>  
+      </td>
+      
+      <td>
+        <div class='center'>
+          <mat-form-field >
+              <mat-label>Note</mat-label>
+              <textarea matInput (change) = "noteChange('Note',$event)" class='note'> </textarea>
+          </mat-form-field>    
+        </div>    
+      </td>
+    </tr><tr> 
+      <td>
+           <mat-checkbox [(ngModel)]="checked" (change) = "WTMparam($event, 'WTMdateChange')"  >WTM Change Needed</mat-checkbox>
+      </td> 
+      <td *ngIf = "tAparams.WTMchange == 1" >
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="1"   (click) = "WTMparam($event, 'WTM_Self' )"   >Self </mat-radio-button>
+          <mat-radio-button value="2"   (click) = "WTMparam($event, 'WTM_CoveringMD' )" >Covering MD </mat-radio-button>
+        </mat-radio-group>
+      </td>
+      <td *ngIf = "tAparams.WTM_self == 1"  >
+        <mat-form-field appearance="fill" class='h50'  >
+          <mat-label>WTM Date</mat-label>
+          <input matInput [(ngModel)]="startDate" [matDatepicker]="picker2" (dateChange)="WTMparam($event, 'WTMdate')" placeholder=" {{ startDateConvent }}">
+          <mat-datepicker-toggle matSuffix [for]="picker2"    ></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </td>
+      <td>     
+           <button class='Button' (click) = "submitTA()">Submit </button>
+      </td>
+    </tr>
+      </table>
+      <div *ngIf = "showError > 0 "  class='warning'> {{ errorTxt }} </div>
+      <div *ngIf = "overlap"  class='warning'  > This Time Away overlaps an already scheduled Time Away therefore  cannot be added to the data base. </div>
+    </div>
+  </div>
+
+
+<!--      The Edit tA  view          -->
+<div class='spacer'  >
+  <div class='raised' *ngIf = showEdit >
+      <table class='toFit' *ngIf = showEdit >
+          <caption> {{ theCaption }} Edit Time Away  {{ vidxToEdit }} </caption>
+        <tr *ngIf = !readOnly>
+            <th> Start Date</th>
+            <th> End Date</th>
+            <th> Reason </th>
+            <th> Note </th>
+        </tr>  
+        <tr>
+        <td class='h50'>
+          <div class='center'>
+        <mat-form-field appearance="fill" *ngIf = showEdit  class='h50'  >
+          <input matInput [(ngModel)]="startDate" [matDatepicker]="picker" (dateChange)="editDate('startDate', $event)" placeholder=" {{ startDateConvent }}">
+          <mat-datepicker-toggle matSuffix [for]="picker"    ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+        </td>
+     <td class='h50' >
+      <div class='center'>
+      <mat-form-field appearance="fill"  class='h50'  >
+        <input matInput [(ngModel)]="startDate" [matDatepicker]="picker2" (dateChange)="editDate('endDate', $event)" placeholder=" {{ endDateConvent}}">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+      </div>
+      </td>
+        <td class='h50' >
+          <div class='center'> 
+          <mat-form-field appearance="fill">
+            <mat-select (selectionChange)="editTaParams( 'reasonIdx', $event)"  [value]="selectedOption">
+              <mat-option value="1">Personal Vacation</mat-option>
+              <mat-option value="4">Other </mat-option>
+            </mat-select>
+          </mat-form-field>
+          </div>
+        </td> 
+   
+        <td class='h50' >
+          <div class='center'>
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Note</mat-label>
+              <input matInput [value] = "vacEdit['note']" (change) = "editTaParams('note', $event.target.value)" >
+            </mat-form-field>
+          </div>
+        </td>
+        <td class='h50' >
+          <div class='center'>
+          <table>
+              <tr><td>
+              <button class='Button' (click) = "saveEdits($event, 'tAchanged')">Save Changes</button>
+            </td><td *ngIf ='changesSavedShow'  class='greenFont'> Changes Saved </td></tr>  
+            <tr><td>
+              <button  class='Button' (click) = "deleteTa($event)">Delete Time Away</button>
+            </td></tr>
+        </table>  
+          </div>
+        </td>
+       </tr>
+       <tr>
+        <th> Coverer </th> <th *ngIf = "vacEdit.WTM_self == 0 && vacEdit.WTM_Change_Needed == 1" > WTM-Coverer </th> 
+                           <th   *ngIf =  "vacEdit.WTM_self == 1  && vacEdit.WTM_Change_Needed == 1 " > WTM Coverer </th>
+                            <th  *ngIf =  "vacEdit.WTM_self == 1  && vacEdit.WTM_Change_Needed == 1  "  >WTM Date </th>
+       </tr>
+       <tr>
+         <td>
+            <div class='center' >
+              <mat-form-field >
+                <mat-label *ngIf = "vacEdit.covererDetails "> {{ vacEdit.covererDetails.LastName }} </mat-label>
+                <mat-select (selectionChange) ="editTaParams('coverageA', $event)"   >
+                  <mat-option *ngFor="let MD of serviceMDs "
+                  [value]="MD.UserKey ">{{ MD.LastName }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>  
+      </td>
+    <td  *ngIf = " vacEdit.WTM_Change_Needed == 1" >
+      <mat-radio-group aria-label="Select an option">
+        <mat-radio-button value="1" [checked]="isWTM_self()"   (click) = "editTaParams('WTM_Self', $event  )"   >Self </mat-radio-button>
+        <mat-radio-button value="2"  [checked]="!isWTM_self()"  (click) = "editTaParams( 'NOT_WTM_Self', $event )" >Covering MD </mat-radio-button>
+      </mat-radio-group>
+
+    </td> 
+    <td  *ngIf = "vacEdit.WTM_self == 1 && vacEdit.WTM_Change_Needed == 1">
+      <mat-form-field appearance="fill" class='h50'  >
+        <mat-label>{{ validDate(vacEdit.WTMdate) }}</mat-label>
+        <input matInput [(ngModel)]="startDate" [matDatepicker]="picker22" (dateChange)="WTMparam($event, 'WTMdate')" 
+          placeholder=" {{ vacEdit.WTMdate }} " [readonly] =  "vacEdit.WTM_self == 0"   >
+        <mat-datepicker-toggle matSuffix [for]="picker22" *ngIf =   "vacEdit.WTM_self == 1"    ></mat-datepicker-toggle>
+        <mat-datepicker #picker22></mat-datepicker>
+      </mat-form-field>
+    </td>
+    <td *ngIf = "tAparams.WTM_self == 1  && vacEdit.WTM_Change_Needed == 1"> {{ vacEdit.WTMdate}}  </td>
+    <td *ngIf = "tAparams.WTM_self == 1  && vacEdit.WTM_Change_Needed == 1"   > {{ vacEdit.WTMnote}} </td>
+  </tr>
+ </table>
+  </div>
+  <!--   THIRD PARTY   view-->
+  <div class='raised' *ngIf = 'showReadOnly ' >
+    <table class='toFit' *ngIf = showReadOnly>
+      <caption> {{ theCaption }}  </caption>
+      <tr >
+          <th> Start- Date</th><th> End Date</th> <th> Reason   </th> <th> Note </th>
+      </tr> 
+      <tr>
+          <td>  {{ startDateConvent }} </td> <td>  {{ endDateConvent }} </td> <td>{{ reasonArr[reasonIdx] }} </td> <td>{{ vacEdit['note'] }} </td>
+      </tr>
+    </table> 
+    <table class = 'toFit' >
+      <caption> VidxShown {{ vacEdit.vidx }} </caption>
+      <tr>
+        <th> Covering Physician</th> <th  *ngIf = 'vacEdit.WTM_Change_Needed == 1' >WTM Coverer</th><th  *ngIf = 'vacEdit.WTM_Change_Needed == 1'  > WTM-Date</th> 
+        <th *ngIf = "vacEdit.WTMnote && vacEdit.WTMnote.length > 2">WTM Note </th>
+      </tr>
+      <tr>
+        <td> Dr. {{ vacEdit.covererDetails.LastName }} </td>
+        <td *ngIf = " vacEdit.WTM_self == 0"> Dr. {{ vacEdit.covererDetails.LastName }}</td>
+        <td   *ngIf = "vacEdit.WTM_self == 1"> Dr. {{ vacEdit.LastName }}</td>
+   
+        <td  *ngIf = 'vacEdit.WTM_Change_Needed == 1'   > {{ showConventDate(vacEdit.WTMdate) }}</td>  <td> {{ vacEdit.WTMnote}}  </td>
+      </tr>
+    </table>
+   </div> 
+
+<!--       Div for Acceptor       -->
+
+   <div *ngIf = 'isLoggedInUserCoverer && showAcceptance' class='raised'>
+
+    <p *ngIf = "toSeeParams['WTM_Change_Needed'] == 0 ||   toSeeParams['WTM_self'] == 1"  > Please accept or Decline this coverage for Dr. {{ toSeeParams['goAwayerLastName']  }}'s  time away. </p>
+    <p *ngIf = "toSeeParams['WTM_Change_Needed'] == 1 &&   toSeeParams['WTM_self'] == 0"  > Please accept or Decline this coverage for Dr. {{ toSeeParams['goAwayerLastName']  }}'s  time away.</p>
+    <p *ngIf = "toSeeParams['WTM_Change_Needed'] == 1 &&   toSeeParams['WTM_self'] == 0"  > You are also being asked to cover Dr. {{ toSeeParams['goAwayerLastName']  }}'s WTM.  .</p>
+    <p *ngIf = "toSeeParams['WTM_Change_Needed'] == 1 &&   toSeeParams['WTM_self'] == 0"  > Please select a WTM date and supply any additional parameters such as WTM location.</p>
+    <table *ngIf = vidxToSee class='toFit'>
+          <tr>
+            <td> 
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Start Date </mat-label>
+                <input matInput placeholder="Ex. Pizza" [value]="toSeeParams['startDateConvent']"  readonly >
+              </mat-form-field>
+            </td>
+             <td> 
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>End Date </mat-label>
+                <input matInput placeholder="Ex. Pizza" [value]="toSeeParams['endDateConvent']"  readonly >
+              </mat-form-field>
+             </td> 
+            <td >   
+                <mat-radio-group>
+                  <mat-radio-button class="example-margin" value="accept" (click) = "editCovParams('CovAccepted', 1)" >Accept</mat-radio-button>
+                  <mat-radio-button class="example-margin" value="decline"  (click) = "editCovParams('CovAccepted', 0)" >Decline</mat-radio-button>
+                </mat-radio-group>
+            </td> 
+       
+            <td *ngIf =  "toSeeParams['WTM_Change_Needed'] == 1 && toSeeParams['WTM_self'] == 0 "> 
+              <mat-form-field  class='h50'  >
+                <mat-label>WTM Date </mat-label>
+                <input matInput [(ngModel)]="startDate" [matDatepicker]="picker5" (dateChange)="editCovParams('WTMdate', $event)" placeholder=" {{ toSeeParams['WTMDateConvent'] }}">
+                <mat-datepicker-toggle matSuffix [for]="picker5"    ></mat-datepicker-toggle>
+                <mat-datepicker #picker5></mat-datepicker>
+              </mat-form-field>
+            </td>
+            <td  *ngIf =  "toSeeParams['WTM_Change_Needed'] == 1 && toSeeParams['WTM_self'] == 0 && CovParams.accepted == 1"  >
+              <div class='center'>
+                <mat-form-field >
+                    <mat-label>WTM Note</mat-label>
+                    <textarea matInput (change) = "editCovParams('WTMnote', $event)" class='note'> </textarea>
+                </mat-form-field>    
+              </div>    
+            </td>
+            <td>
+              <button class='Button' (click) = "saveEdits($event, 'CovAccept')">Submit</button>
+              <!--
+              <table>
+                 <tr><td><button class='Button' (click) = "saveEdits($event, 'CovAccept')">Submit </button></td></tr>
+                 <tr ><td> {{ acknowlegeEdits }}</td></tr>
+             </table>
+            -->
+            </td>
+        </tr>
+    </table>
+  </div>
+</div>
+<button (click)="goToLink()">Users Manual </button>
+<br><br>

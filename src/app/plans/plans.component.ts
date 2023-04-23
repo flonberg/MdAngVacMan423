@@ -102,6 +102,7 @@ export class PlansComponent implements OnInit {
       this .getTheData();
       this .getServiceMDs(this .userid)
       this. getMDService();
+      let i = 223       //test for commit
     })
    }
 

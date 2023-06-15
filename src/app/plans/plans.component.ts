@@ -409,7 +409,8 @@ console.log("396 in saveEdits tAparams is %o", this .tAparams)
                       // form the data to pass to php script
  // var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/editAngVac.php?email='+emailParam;  // set endPoint
  // url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/dev/editAngVac.php?email='+emailParam;  // set endPoint for dev
-  var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/'+this. wkDev+'/editAngVac.php?email='+emailParam;  // set endPoint for dev
+  //var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/'+this. wkDev+'/editAngVac.php?email='+emailParam;  // set endPoint for dev
+  var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/editAngVac.php?email='+emailParam;  // set endPoint for dev
   console.log('420 url is %o', url);
     this .http.post(url, jData).subscribe(res =>{                     // do the http.post
       this .getTheData();                                           // refresh the data to show the edits. 
@@ -560,8 +561,9 @@ private validDate(dateString){
    */
   getClass(n){
     n--;                                                // accomodate Service column
-    if (n == this .dayOfMonth && this. monthInc == 0)
-      return 'todayCell'
+   // if (n == this .dayOfMonth && this. monthInc == 0)
+     // return 'todayCell'
+     return false
   }
 
   getNameClass(d){
@@ -810,8 +812,8 @@ submitTA(){                                                                  // 
   if (this .checkTAparams()){
       var jData = JSON.stringify(this .tAparams)
     //  var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/enterAngVac.php';
-    //  url = 'https://whiteboard.partners.org/esb/FLwbe/dev/vacation/enterAngVac.php';
-      var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/'+this. wkDev+'/enterAngVac.php';
+      var url = 'https://whiteboard.partners.org/esb/FLwbe/dev/vacation/enterAngVac.php';
+    //  var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/'+this. wkDev+'/enterAngVac.php';
       this .http.post(url, jData).subscribe(ret=>{
           this .postRes = (ret)                                         // php returns 0 for overlap and 1 for clean
             this .overlap = this. postRes['result'] == 0 ? true : false;    // turn on Warning message. 

@@ -7,6 +7,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { throwError } from 'rxjs';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 interface tAparams {
   startDate? : string,
@@ -668,20 +669,18 @@ counterE(n){                                            // used for looper in Ca
       while (firstDay <= lastDay)
   //    this .numDaysOnCal = 61; 
     }
-
+DDD: number
   daysTillEnd(val){
       const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-      if (!val)
-          return;
-      var endDate = new Date(val['endDate'])
-/* if (this. monthInc > 0) {    
-    console.log("359 %o", val)
- }*/   
-      endDate = new Date(endDate.getTime() + endDate.getTimezoneOffset() * 60000)
- //     endDate.toLocaleString('en-US', { timeZone: 'America/New_York' })
-      var calEndDate = new Date( this. calDates[this. calDates.length-1])
-      var diff =Math.round( (calEndDate.valueOf() - endDate.valueOf())/oneDay);
-     return diff +1;
+      console.log(val['endDate']);
+   //   console.log(this .calParams.lastDateOnCal)
+      let endD = moment(this .calParams.lastDateOnCal )
+      let startD = moment(val['endDate'])
+      let diffT = Math.abs(startD.diff(endD, 'days'))
+      console.log("678 endDate is " + val['endDate']  + "didd is " + diffT)
+      this.DDD - diffT
+      return diffT
+    
     }
     
   daysBetween(val1, val2){                        // used by counter function

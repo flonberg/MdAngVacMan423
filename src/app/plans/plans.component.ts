@@ -672,6 +672,7 @@ counterE(n){                                            // used for looper in Ca
 DDD: number
   daysTillEnd(val){
       const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+      if (val){
       console.log(val['endDate']);
    //   console.log(this .calParams.lastDateOnCal)
       let endD = moment(this .calParams.lastDateOnCal )
@@ -680,6 +681,9 @@ DDD: number
       console.log("678 endDate is " + val['endDate']  + "didd is " + diffT)
       this.DDD - diffT
       return diffT
+      }
+      else  
+        return 0
     
     }
     

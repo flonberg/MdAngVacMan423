@@ -55,6 +55,7 @@ export class PlansComponent implements OnInit {
   isLoggedInUserCoverer: boolean = false;
   monthInc:number = 0;
   getVacURL = 'https://whiteboard.partners.org/esb/FLwbe/vacation/getMDtAs.php?adv='+ this.monthInc;
+  adminURL =  'https://whiteboard.partners.org/esb/FLWBE/vacation/getAdmins.php';
   vacData: any;
   coverers: any;                                    // the coveres are the MDs in the same SERVICE as goAwayer
   vacEdit: any;                                     // data for the EditVac boxes 
@@ -103,6 +104,7 @@ export class PlansComponent implements OnInit {
       this .getTheData();
       this .getServiceMDs(this .userid)
       this. getMDService();
+      this .getAdmins()
       let i = 223       //test for commit
     })
    }
@@ -233,7 +235,15 @@ console.log("198 serviceMDs is %o", this. serviceMDs)
       this. MDservice = res;
           })
   }
-
+MDAdmins: any   
+private getAdmins(){
+    let url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/getAdmins.php'
+    this .http.get(url).subscribe(res =>{
+      this. MDAdmins = res;
+      console.log("242242")
+      console.log(this .MDAdmins)
+          })
+  }
 
    /**
   * Used by enterTa to signal a new tA has been added and we need to reload the data. 
@@ -673,14 +683,14 @@ DDD: number
   daysTillEnd(val){
       const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
       if (val){
-      console.log(val['endDate']);
-   //   console.log(this .calParams.lastDateOnCal)
-      let endD = moment(this .calParams.lastDateOnCal )
-      let startD = moment(val['endDate'])
-      let diffT = Math.abs(startD.diff(endD, 'days'))
-      console.log("678 endDate is " + val['endDate']  + "didd is " + diffT)
-      this.DDD - diffT
-      return diffT
+     //   console.log(val['endDate']);
+    //   console.log(this .calParams.lastDateOnCal)
+        let endD = moment(this .calParams.lastDateOnCal )
+        let startD = moment(val['endDate'])
+        let diffT = Math.abs(startD.diff(endD, 'days'))
+    //    console.log("678 endDate is " + val['endDate']  + "didd is " + diffT)
+        this.DDD - diffT
+        return diffT
       }
       else  
         return 0

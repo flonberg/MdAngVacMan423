@@ -65,7 +65,7 @@
       <div   *ngIf = 'item.value[9][2]'>  </div> 
        </td>
    </ng-container>
-   
+
 <!-- 4th tA in a Row-->
    <ng-container *ngIf = 'item.value[3]'> 
     <td *ngFor= 'let loop6 of counter( daysBetween(item.value[2], item.value[3])); let ip = index ' [className] = 'getClass( item.value[9][3][ip])'     ></td>
@@ -109,6 +109,17 @@
     <table class='centerSmall'>
         <caption> Enter a Time Away  </caption>
         <tr>
+        <td> 
+          <div class='center'>
+            <mat-form-field >
+              <mat-label> Reason</mat-label>
+              <mat-select (selectionChange) = "reasonSelect($event)" >
+                <mat-option value="1">Personal Vacation</mat-option>
+                <mat-option value="4">Other </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>  
+        </td>    
       <td>
         <div class='center'>
           <mat-form-field >

@@ -89,6 +89,7 @@ export class PlansComponent implements OnInit {
   stDt: string = '';
   changesSavedShow = false;
   loggedInUserKey = 0;
+  vacUserKey = 0
   isUserAnMD = false;
   wkDev = "dev";
   constructor(private http: HttpClient, private datePipe: DatePipe , private activatedRoute: ActivatedRoute) {
@@ -104,7 +105,7 @@ export class PlansComponent implements OnInit {
       this .getTheData();
       this .getServiceMDs(this .userid)
       this. getMDService();
-      this .getAdmins()
+
       let i = 223       //test for commit
     })
    }
@@ -142,13 +143,15 @@ export class PlansComponent implements OnInit {
         service: 0
       }
       this. activatedRoute.queryParams.subscribe(params =>{
-        this .userid = params['userid']
+        this .userid = params['userid']    
         this .tAparams.userid = params['userid']
         if (this .userid){
           let url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/getLoggedInUserKey.php?userid='+ this .userid
           this .http.get(url).subscribe(res =>{
             let returnedObj = res;
             this .loggedInUserKey = returnedObj['LoggedInUserKey'];
+  console.log("152 loggedInUserKey is " + this .loggedInUserKey)
+            this .getAdmins()
           })
         }
       })
@@ -235,16 +238,26 @@ console.log("198 serviceMDs is %o", this. serviceMDs)
       this. MDservice = res;
           })
   }
-MDAdmins: any   
+  
+MDAdmins: any 
+AdminsMDuserid: string = '' 
+AdminsMDuserkey: number = 0  
+/**
+ * Get the Admin to MD mapping for the logged in Admin. If there is no MD set to pure ViewOnly
+ */
 private getAdmins(){
-    let url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/getAdmins.php'
+    let url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/getAdmins.php?UserKey='+this .loggedInUserKey
     this .http.get(url).subscribe(res =>{
       this. MDAdmins = res;
-      console.log("242242")
-      console.log(this .MDAdmins)
-          })
+      if (this .MDAdmins){                                  // valid return
+          if (Object.keys(this .MDAdmins).length == 1)      // Only on MD for this Admin
+            this .vacUserKey = +Object.keys(this .MDAdmins) // Set Editable and Creatable to this MD
+            this .AdminsMDuserkey = this .MDAdmins[this .vacUserKey]['userKey']
+            this .AdminsMDuserid = this .MDAdmins[this .vacUserKey]['pUserID']
+        console.log("255 %o   ----- %o ", this .AdminsMDuserkey, this.AdminsMDuserid)    
+         }
+      })
   }
-
    /**
   * Used by enterTa to signal a new tA has been added and we need to reload the data. 
   * @param ev 

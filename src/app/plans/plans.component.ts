@@ -23,7 +23,7 @@ interface tAparams {
   WTMcoverer: string;
   WTMchange:number;
   WTM_self:Number;
-  userid: number;
+  userid: string;
   WTM_Change_Needed: number;
   service: number;
 }
@@ -131,7 +131,7 @@ export class PlansComponent implements OnInit {
         endDate: '',
         reasonIdx: -1,
         note: '',
-        userid: 0,
+        userid: '',
         coverageA: 0,
         WTMdate:'',
         WTMchange: 0,
@@ -150,7 +150,6 @@ export class PlansComponent implements OnInit {
           this .http.get(url).subscribe(res =>{
             let returnedObj = res;
             this .loggedInUserKey = returnedObj['LoggedInUserKey'];
-  console.log("152 loggedInUserKey is " + this .loggedInUserKey)
             this .getAdmins()
           })
         }
@@ -217,8 +216,6 @@ export class PlansComponent implements OnInit {
         byServArr[serv][currInd+1] = this .vacData[i]
       }  
     }
-
-
     }
   private getServiceMDs(userid){
     let url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/getMDsByService.php?userid='+ userid
@@ -231,14 +228,13 @@ export class PlansComponent implements OnInit {
 console.log("198 serviceMDs is %o", this. serviceMDs)
           })
   }
-
  private getMDService(){
     let url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/getMDService.php'
     this .http.get(url).subscribe(res =>{
       this. MDservice = res;
           })
   }
-  
+
 MDAdmins: any 
 AdminsMDuserid: string = '' 
 AdminsMDuserkey: number = 0  
@@ -254,9 +250,12 @@ private getAdmins(){
             this .vacUserKey = +Object.keys(this .MDAdmins) // Set Editable and Creatable to this MD
             this .AdminsMDuserkey = this .MDAdmins[this .vacUserKey]['userKey']
             this .AdminsMDuserid = this .MDAdmins[this .vacUserKey]['pUserID']
-        console.log("255 %o   ----- %o ", this .AdminsMDuserkey, this.AdminsMDuserid)    
+            this .isUserAnMD = true
+        console.log("255 %o   ----- %o ", this .AdminsMDuserkey, this.AdminsMDuserid)   
+        this .tAparams.userid = this .AdminsMDuserid 
          }
       })
+       this .AdminsMDuserid
   }
    /**
   * Used by enterTa to signal a new tA has been added and we need to reload the data. 
@@ -554,9 +553,10 @@ selectedOption:string
    this .vacEdit = vacEdit; 
    this. showEdit =  this. userid.includes(vacEdit['userid']) 
    if (this .AdminsMDuserid){                                         // user is a MD Admin
-    this .showEdit = this .AdminsMDuserid == vacEdit['userid']        // Vac belongs to Admin's MD
-   }
-   this. showReadOnly =  !this. userid.includes(vacEdit['userid']) 
+    this .showEdit = this .AdminsMDuserid == vacEdit['userid']        // Vac belongs to Admin's MD, Ta box
+    this .showReadOnly = !this.showEdit                               // Dont show readOnly box
+  }
+   //this. showReadOnly =  !this. userid.includes(vacEdit['userid']) 
  } 
 private validDate(dateString){
   if (dateString.includes('1900'))
@@ -760,7 +760,6 @@ checkTAparams(){
     this .showError = 1;
     return false;
   }
-
   if (this. tAparams.startDate.length < 3 || this. tAparams.endDate.length < 3){
     this. errorTxt = "Please enter Start and End Date";
     this .showError = 2;
@@ -777,7 +776,7 @@ checkTAparams(){
     return false;
   } 
   if (this .tAparams. WTMchange == 1){
-    if (this .tAparams.WTM_self < 0){
+    if (+this .tAparams.WTM_self < 0){
       this. errorTxt = "Please select Self or Covering MD";
       this .showError = 5;
       return false
@@ -839,11 +838,13 @@ faultMessage; string;
 submitTA(){                                                                  // need to put in full error checking. 
   this .faultMessage = "t";
   if (this .checkTAparams()){
+console.log( "841 checkTAparams %o",this .tAparams)    
       var jData = JSON.stringify(this .tAparams)
     //  var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/enterAngVac.php';
       var url = 'https://whiteboard.partners.org/esb/FLwbe/dev/vacation/enterAngVac.php';
     //  var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/'+this. wkDev+'/enterAngVac.php';
-      this .http.post(url, jData).subscribe(ret=>{
+   
+    this .http.post(url, jData).subscribe(ret=>{
           this .postRes = (ret)                                         // php returns 0 for overlap and 1 for clean
             this .overlap = this. postRes['result'] == 0 ? true : false;    // turn on Warning message. 
             {
@@ -857,6 +858,7 @@ submitTA(){                                                                  // 
             this .getTheData();  
             }
         )
+
       this .sDD = '';
       }
    else {

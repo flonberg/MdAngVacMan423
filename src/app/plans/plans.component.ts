@@ -553,6 +553,9 @@ selectedOption:string
    this .selectedOption = String(vacEdit.reasonIdx)
    this .vacEdit = vacEdit; 
    this. showEdit =  this. userid.includes(vacEdit['userid']) 
+   if (this .AdminsMDuserid){                                         // user is a MD Admin
+    this .showEdit = this .AdminsMDuserid == vacEdit['userid']        // Vac belongs to Admin's MD
+   }
    this. showReadOnly =  !this. userid.includes(vacEdit['userid']) 
  } 
 private validDate(dateString){

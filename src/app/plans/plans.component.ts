@@ -105,6 +105,7 @@ export class PlansComponent implements OnInit {
       this .getTheData();
       this .getServiceMDs(this .userid)
       this. getMDService();
+      this .getMDAdmins()
 
       let i = 223       //test for commit
     })
@@ -234,6 +235,31 @@ console.log("198 serviceMDs is %o", this. serviceMDs)
       this. MDservice = res;
           })
   }
+MD_Admins: any 
+MD_SortedAdmins: any 
+private getMDAdmins(){
+  let url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/dev/MD_Admins.php'
+  this .http.get(url).subscribe(res =>{
+    this. MD_Admins = res;
+
+console.log("243 MC_Admins %o", this .MD_Admins) 
+    this .MD_SortedAdmins = []
+    Object.keys(this .MD_Admins).forEach(key=>{
+      console.log("247 %o --- %o", key, this .MD_Admins[key]['AdminUserKey'])
+      let elKey = this .MD_Admins[key]['AdminUserKey']
+      if (!this .MD_SortedAdmins[elKey]){                // if NO element for this Admin
+        this .MD_SortedAdmins[elKey] = []                                       // create is
+        this .MD_SortedAdmins[elKey].push(this .MD_Admins[key]['MDUserKey']) // push the MD into the array
+      }
+      else
+        this .MD_SortedAdmins[elKey].push(this .MD_Admins[key]['MDUserKey']) // push the MD into the array
+
+     })
+    console.log("257 %o", this .MD_SortedAdmins)
+   })
+  }
+        
+
 
 MDAdmins: any 
 AdminsMDuserid: string = '' 
@@ -838,7 +864,7 @@ faultMessage; string;
 submitTA(){                                                                  // need to put in full error checking. 
   this .faultMessage = "t";
   if (this .checkTAparams()){
-console.log( "841 checkTAparams %o",this .tAparams)    
+
       var jData = JSON.stringify(this .tAparams)
     //  var url = 'https://whiteboard.partners.org/esb/FLwbe/vacation/enterAngVac.php';
       var url = 'https://whiteboard.partners.org/esb/FLwbe/dev/vacation/enterAngVac.php';
